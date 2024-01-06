@@ -12,9 +12,16 @@ import { APP_GUARD } from '@nestjs/core';
 import { RegisterUserCommandHandler } from './application/usecases/auth/commands/RegisterUserCommand';
 import { ImportController } from './api/controllers/import.controller';
 import { ImportCourseCommandHandler } from './application/usecases/import/commands/ImportCourseCommand';
+import { ImportClassCommandHandler } from './application/usecases/import/commands/ImportClassCommand';
+import { ImportUpdateClassCommandHandler } from './application/usecases/import/commands/ImportUpdateClassCommand';
 
 const queryHandler = [GetTokenQueryHandler];
-const commandHandler = [RegisterUserCommandHandler, ImportCourseCommandHandler];
+const commandHandler = [
+  RegisterUserCommandHandler,
+  ImportCourseCommandHandler,
+  ImportClassCommandHandler,
+  ImportUpdateClassCommandHandler,
+];
 
 @Module({
   imports: [
