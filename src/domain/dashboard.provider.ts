@@ -3,6 +3,7 @@ import { UserSchema } from './entities/user.entity';
 import { ClassInfoSchema } from './entities/class-info.entity';
 import { ClassSchema } from './entities/class.entity';
 import { CourseSchema } from './entities/course.entity';
+import { MajorSchema } from './entities/major.entity';
 
 export const dashboardProviders = [
   {
@@ -14,7 +15,7 @@ export const dashboardProviders = [
   {
     provide: 'MAJOR_MODEL',
     useFactory: (connection: Connection) =>
-      connection.model('Majors', UserSchema),
+      connection.model('Majors', MajorSchema),
     inject: ['DATABASE_CONNECTION'],
   },
   {
