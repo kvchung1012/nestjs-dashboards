@@ -13,6 +13,8 @@ export class DashboardController {
     private courseModel: Model<Course>,
     @Inject('CLASS_MODEL')
     private classModel: Model<Class>,
+    @Inject('MAJOR_MODEL')
+    private majorModel: Model<Class>,
   ) {}
 
   @Public()
@@ -124,6 +126,30 @@ export class DashboardController {
       {
         $group: {
           _id: '$batch',
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('get-enroll')
+  async GetEnroll() {
+    return await this.courseModel.aggregate([
+      {
+        $group: {
+          _id: '$enrollment',
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('get-major')
+  async GetMajor() {
+    return await this.majorModel.aggregate([
+      {
+        $group: {
+          _id: '$name',
         },
       },
     ]);
