@@ -3,4 +3,5 @@ export interface Course extends Document {
   name: string;
   score: number;
   enrollment: number;
+  semester: string;
 }

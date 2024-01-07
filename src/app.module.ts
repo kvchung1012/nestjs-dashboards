@@ -14,6 +14,7 @@ import { ImportController } from './api/controllers/import.controller';
 import { ImportCourseCommandHandler } from './application/usecases/import/commands/ImportCourseCommand';
 import { ImportClassCommandHandler } from './application/usecases/import/commands/ImportClassCommand';
 import { ImportUpdateClassCommandHandler } from './application/usecases/import/commands/ImportUpdateClassCommand';
+import { DashboardController } from './api/controllers/dashboard.controller';
 
 const queryHandler = [GetTokenQueryHandler];
 const commandHandler = [
@@ -32,7 +33,12 @@ const commandHandler = [
       signOptions: { expiresIn: '60d' },
     }),
   ],
-  controllers: [AppController, AuthController, ImportController],
+  controllers: [
+    AppController,
+    AuthController,
+    ImportController,
+    DashboardController,
+  ],
   providers: [
     AppService,
     ...DatabaseProviders,

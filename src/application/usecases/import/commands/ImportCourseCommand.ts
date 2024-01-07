@@ -42,7 +42,8 @@ export class ImportCourseCommandHandler
       // kiểm tra xem data có phải của ngành IT hay không
       if (className.toString().startsWith('IT')) {
         const courseName = row.getCell(2).value.toString();
-        const major = className.substr(2, 2);
+        const major = className?.substr(2, 2);
+        const semester = className?.substr(6, 2);
         const score = row.getCell(6).value.toString();
         const enroll = row.getCell(7).value.toString();
         // check major
@@ -55,6 +56,7 @@ export class ImportCourseCommandHandler
         const courseDb = await this.courseModel.findOne({
           name: courseName,
           enrollment: enroll,
+          semester: semester,
         });
 
         if (!courseDb) {
@@ -62,6 +64,7 @@ export class ImportCourseCommandHandler
             name: courseName,
             score: score,
             enrollment: enroll,
+            semester: semester,
           });
 
           await createCourse.save();
