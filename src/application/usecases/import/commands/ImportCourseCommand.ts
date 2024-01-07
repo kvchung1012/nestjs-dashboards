@@ -57,6 +57,7 @@ export class ImportCourseCommandHandler
           name: courseName,
           enrollment: enroll,
           semester: semester,
+          major: major,
         });
 
         if (!courseDb) {
@@ -65,6 +66,7 @@ export class ImportCourseCommandHandler
             score: score,
             enrollment: enroll,
             semester: semester,
+            major: major,
           });
 
           await createCourse.save();

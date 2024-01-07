@@ -52,6 +52,7 @@ export class ImportClassCommandHandler
       const classDb = await this.classModel.findOne({
         name: classId,
         majorId: majorId,
+        major: major,
         version: version,
         englishLevel: englishLevel,
       });
@@ -60,6 +61,7 @@ export class ImportClassCommandHandler
         const createClass = await this.classModel.create({
           name: classId,
           majorId: majorId,
+          major: major,
           version: version,
           englishLevel: englishLevel,
         });
