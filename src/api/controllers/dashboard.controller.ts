@@ -104,4 +104,66 @@ export class DashboardController {
       },
     ]);
   }
+
+  @Public()
+  @Get('get-english-level')
+  async GetEnglishLevel() {
+    return await this.classModel.aggregate([
+      {
+        $group: {
+          _id: '$englishLevel',
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('get-batch')
+  async GetBatch() {
+    return await this.classModel.aggregate([
+      {
+        $group: {
+          _id: '$batch',
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('count-class-by-english-level')
+  @ApiQuery({ name: 'major', type: String })
+  async CountClassByEnglishLevel(@Query('major') major: string) {
+    return await this.classModel.aggregate([
+      {
+        $match: {
+          major: major,
+        },
+      },
+      {
+        $group: {
+          _id: '$englishLevel',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('count-class-by-batch')
+  @ApiQuery({ name: 'major', type: String })
+  async CountClassByMajor(@Query('major') major: string) {
+    return await this.classModel.aggregate([
+      {
+        $match: {
+          major: major,
+        },
+      },
+      {
+        $group: {
+          _id: '$batch',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  }
 }
