@@ -1,5 +1,5 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { Public } from '../guards/public.guard';
 import { CourseSummaryDto } from '../dtos/dashboards/CourseSummaryDto';
 import { Class } from 'src/domain/interfaces/class.interface';
@@ -49,6 +49,56 @@ export class DashboardController {
       {
         $group: {
           _id: '$name',
+          avg: { $avg: '$score' },
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('course')
+  async GetCourse() {
+    return await this.courseModel.aggregate([
+      {
+        $group: {
+          _id: '$name',
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('course-score-by-major')
+  @ApiQuery({ name: 'name', type: String })
+  async ByCourseScore(@Query('name') name: string) {
+    return await this.courseModel.aggregate([
+      {
+        $match: {
+          name: name,
+        },
+      },
+      {
+        $group: {
+          _id: '$major',
+          avg: { $avg: '$score' },
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('course-score-by-enrollment')
+  @ApiQuery({ name: 'name', type: String })
+  async ByCourseScoreEnroll(@Query('name') name: string) {
+    return await this.courseModel.aggregate([
+      {
+        $match: {
+          name: name,
+        },
+      },
+      {
+        $group: {
+          _id: '$enrollment',
           avg: { $avg: '$score' },
         },
       },
