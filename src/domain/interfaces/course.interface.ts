@@ -1,8 +1,9 @@
 export interface Course extends Document {
   _id: string;
-  name: string;
-  score: number;
-  enrollment: number;
-  semester: string;
+  year: string;
+  course: string;
+  credit: string;
   major: string;
+  englishLevel: string;
+  version: string;
 }

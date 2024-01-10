@@ -15,6 +15,7 @@ import { ImportCourseCommandHandler } from './application/usecases/import/comman
 import { ImportClassCommandHandler } from './application/usecases/import/commands/ImportClassCommand';
 import { ImportUpdateClassCommandHandler } from './application/usecases/import/commands/ImportUpdateClassCommand';
 import { DashboardController } from './api/controllers/dashboard.controller';
+import { ImportClassReportCommandHandler } from './application/usecases/import/commands/ImportClassReportCommand';
 
 const queryHandler = [GetTokenQueryHandler];
 const commandHandler = [
@@ -22,6 +23,7 @@ const commandHandler = [
   ImportCourseCommandHandler,
   ImportClassCommandHandler,
   ImportUpdateClassCommandHandler,
+  ImportClassReportCommandHandler,
 ];
 
 @Module({

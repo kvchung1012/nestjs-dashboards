@@ -15,6 +15,8 @@ export class DashboardController {
     private classModel: Model<Class>,
     @Inject('MAJOR_MODEL')
     private majorModel: Model<Class>,
+    @Inject('REPORT_MODEL')
+    private reportModel: Model<Class>,
   ) {}
 
   @Public()
@@ -188,6 +190,39 @@ export class DashboardController {
         $group: {
           _id: '$batch',
           count: { $sum: 1 },
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('get-report-chart')
+  @ApiQuery({ name: 'version', type: String })
+  async GetReport(@Query('version') version: string) {
+    return await this.reportModel.aggregate([
+      {
+        $match: {
+          version: version,
+        },
+      },
+      {
+        $group: {
+          _id: '$year',
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+  }
+
+  @Public()
+  @Get('get-version')
+  async GetVersion() {
+    return await this.reportModel.aggregate([
+      {
+        $group: {
+          _id: '$version',
         },
       },
     ]);

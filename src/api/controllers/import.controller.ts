@@ -11,6 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportCourseCommand } from 'src/application/usecases/import/commands/ImportCourseCommand';
 import { ImportClassCommand } from 'src/application/usecases/import/commands/ImportClassCommand';
 import { ImportUpdateClassCommand } from 'src/application/usecases/import/commands/ImportUpdateClassCommand';
+import { ImportClassReportCommand } from 'src/application/usecases/import/commands/ImportClassReportCommand';
 
 @Controller('import')
 export class ImportController {
@@ -75,6 +76,27 @@ export class ImportController {
   async importClassUpdate(@UploadedFile() file: Express.Multer.File) {
     return await this.commandBus.execute(
       new ImportUpdateClassCommand(file.buffer),
+    );
+  }
+
+  @Public()
+  @Post('report')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async importReport(@UploadedFile() file: Express.Multer.File) {
+    return await this.commandBus.execute(
+      new ImportClassReportCommand(file.buffer),
     );
   }
 }
