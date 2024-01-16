@@ -5,6 +5,7 @@ import { ClassSchema } from './entities/class.entity';
 import { CourseSchema } from './entities/course.entity';
 import { MajorSchema } from './entities/major.entity';
 import { ReportSchema } from './entities/report.entity';
+import { ScheduleSchema } from './entities/schedule.entity';
 
 export const dashboardProviders = [
   {
@@ -41,6 +42,12 @@ export const dashboardProviders = [
     provide: 'REPORT_MODEL',
     useFactory: (connection: Connection) =>
       connection.model('Reports', ReportSchema),
+    inject: ['DATABASE_CONNECTION'],
+  },
+  {
+    provide: 'SCHEDULE_MODEL',
+    useFactory: (connection: Connection) =>
+      connection.model('Schedules', ScheduleSchema),
     inject: ['DATABASE_CONNECTION'],
   },
 ];

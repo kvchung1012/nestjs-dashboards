@@ -5,6 +5,8 @@ import { CourseSummaryDto } from '../dtos/dashboards/CourseSummaryDto';
 import { Class } from 'src/domain/interfaces/class.interface';
 import { Course } from 'src/domain/interfaces/course.interface';
 import { Model } from 'mongoose';
+import { Report } from 'src/domain/interfaces/report.interface';
+import { Schedule } from 'src/domain/interfaces/schedule.interface';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -16,7 +18,9 @@ export class DashboardController {
     @Inject('MAJOR_MODEL')
     private majorModel: Model<Class>,
     @Inject('REPORT_MODEL')
-    private reportModel: Model<Class>,
+    private reportModel: Model<Report>,
+    @Inject('SCHEDULE_MODEL')
+    private scheduleModel: Model<Schedule>,
   ) {}
 
   @Public()
@@ -226,5 +230,52 @@ export class DashboardController {
         },
       },
     ]);
+  }
+
+  @Public()
+  @Get('get-new-chart')
+  async GetChart(
+    @Query('major') major: string,
+    @Query('enroll') enroll: string,
+    @Query('semester') semester: string,
+    @Query('year') year: string,
+  ) {
+    const course = await this.reportModel.aggregate([
+      {
+        $match: {
+          major: major,
+          year: year,
+          semester: semester,
+        },
+      },
+      {
+        $group: {
+          _id: '$course',
+        },
+      },
+    ]);
+
+    const schedules = await this.scheduleModel.find({});
+
+    // tìm tổng học sinh theo nghành và khóa
+    const totalStudent = schedules.filter(
+      (x) =>
+        x.studentCode.toUpperCase().includes(major.toUpperCase()) &&
+        x.studentCode.toUpperCase().includes(enroll.toUpperCase()),
+    ).length;
+
+    const results = course.map((x) => {
+      return {
+        group: x._id,
+        totalStudentLearned: schedules.filter(
+          (y) =>
+            y.studentCode.includes(major) &&
+            y.studentCode.includes(enroll) &&
+            y.course.includes(x._id),
+        ).length,
+        totalStudent: totalStudent,
+      };
+    });
+    return results;
   }
 }

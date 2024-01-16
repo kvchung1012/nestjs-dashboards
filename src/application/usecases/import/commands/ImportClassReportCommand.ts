@@ -35,8 +35,12 @@ export class ImportClassReportCommandHandler
       // Assuming each row contains a single column with data
       //   data.push(row.getCell(1).value);
       // kiểm tra xem data có phải của ngành IT hay không
-      if (row.getCell(3).value.toString().startsWith('IT') && row.getCell(2).value.toString() != "-1") {
-        const year = row.getCell(2).value.toString();
+      if (
+        row.getCell(3).value.toString().startsWith('IT') &&
+        row.getCell(2).value.toString() != '-1'
+      ) {
+        const year = row.getCell(1).value.toString();
+        const semester = row.getCell(2).value.toString();
         const courseName = row.getCell(5).value.toString();
         const credit = row.getCell(6).value.toString().split(' ')[0];
         const program = row.getCell(7).value.toString();
@@ -53,6 +57,7 @@ export class ImportClassReportCommandHandler
           credit: credit,
           version: version,
           englishLevel: englishLevel,
+          semester: semester,
         });
 
         if (!checkReport) {
@@ -63,6 +68,7 @@ export class ImportClassReportCommandHandler
             credit: credit,
             version: version,
             englishLevel: englishLevel,
+            semester: semester,
           });
 
           await createClass.save();

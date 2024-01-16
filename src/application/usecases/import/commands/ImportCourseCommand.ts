@@ -5,6 +5,7 @@ import { User } from 'src/domain/interfaces/user.interface';
 import * as ExcelJS from 'exceljs';
 import { Major } from 'src/domain/interfaces/major.interface';
 import { Course } from 'src/domain/interfaces/course.interface';
+import { Schedule } from 'src/domain/interfaces/schedule.interface';
 
 export class ImportCourseCommand {
   constructor(public readonly buffer: Buffer) {}
@@ -21,6 +22,8 @@ export class ImportCourseCommandHandler
     private majorModel: Model<Major>,
     @Inject('COURSE_MODEL')
     private courseModel: Model<Course>,
+    @Inject('SCHEDULE_MODEL')
+    private scheduleModel: Model<Schedule>,
   ) {}
 
   /**
@@ -46,6 +49,7 @@ export class ImportCourseCommandHandler
         const semester = className?.substr(6, 2);
         const score = row.getCell(6).value.toString();
         const enroll = row.getCell(7).value.toString();
+        const studentCode = row.getCell(4).value.toString();
         // check major
 
         if (!checkMajor.includes(major)) {
@@ -71,6 +75,15 @@ export class ImportCourseCommandHandler
 
           await createCourse.save();
         }
+
+        const cc = await this.scheduleModel.create({
+          course: courseName,
+          score: score,
+          enrollment: enroll,
+          studentCode: studentCode,
+        });
+
+        cc.save();
       }
     });
 
