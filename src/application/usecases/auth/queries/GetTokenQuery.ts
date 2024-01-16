@@ -23,12 +23,12 @@ export class GetTokenQueryHandler implements IQueryHandler<GetTokenQuery> {
     console.log(query);
     const user = await this.userModel
       .findOne({
-        user_name: query.userName,
+        userName: query.userName,
         password: query.password,
       })
       .exec();
 
-    const payload = { sub: user.id, username: user.userName };
+    const payload = { sub: user._id, username: user.userName };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
