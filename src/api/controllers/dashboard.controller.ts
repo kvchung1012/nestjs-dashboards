@@ -264,7 +264,7 @@ export class DashboardController {
         // tổng sinh viên học pass môn
         totalStudentLearned: schedules.filter(
           (y) =>
-            y.studentCode.includes(major) &&
+            (y.studentCode.includes(major) || y.studentCode.includes('ITIT')) &&
             y.studentCode.includes(enroll) &&
             y.course.includes(x._id) &&
             y.score >= 50,
@@ -272,7 +272,7 @@ export class DashboardController {
         // tổng sinh viên học course
         totalStudent: schedules.filter(
           (y) =>
-            y.studentCode.includes(major) &&
+            (y.studentCode.includes(major) || y.studentCode.includes('ITIT')) &&
             y.studentCode.includes(enroll) &&
             y.course.includes(x._id),
         ).length,
