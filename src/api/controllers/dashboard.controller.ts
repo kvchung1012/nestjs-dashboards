@@ -64,6 +64,24 @@ export class DashboardController {
   }
 
   @Public()
+  @Post('get-total-student')
+  @ApiBody({ type: CourseSummaryDto })
+  async GetTotalStudent(@Body() courseSummaryDto: CourseSummaryDto) {
+    const schedules = await this.scheduleModel.find({});
+
+    // tìm tổng học sinh theo nghành và khóa
+    const totalStudent = schedules.filter(
+      (x) =>
+        x.studentCode
+          .toUpperCase()
+          .includes(courseSummaryDto.major.toUpperCase()) &&
+        x.studentCode.toUpperCase().includes(courseSummaryDto.enrollment + ''),
+    ).length;
+
+    return totalStudent;
+  }
+
+  @Public()
   @Get('course')
   async GetCourse() {
     return await this.courseModel.aggregate([
@@ -255,27 +273,25 @@ export class DashboardController {
       },
     ]);
 
-    // lịch học của sinh viên lấy trong file diem_nguyen.xlsx
     const schedules = await this.scheduleModel.find({});
+
+    // tìm tổng học sinh theo nghành và khóa
+    const totalStudent = schedules.filter(
+      (x) =>
+        x.studentCode.toUpperCase().includes(major.toUpperCase()) &&
+        x.studentCode.toUpperCase().includes(enroll.toUpperCase()),
+    ).length;
 
     const results = course.map((x) => {
       return {
         group: x._id,
-        // tổng sinh viên học pass môn
         totalStudentLearned: schedules.filter(
           (y) =>
-            (y.studentCode.includes(major) || y.studentCode.includes('ITIT')) &&
-            y.studentCode.includes(enroll) &&
-            y.course.includes(x._id) &&
-            y.score >= 50,
-        ).length,
-        // tổng sinh viên học course
-        totalStudent: schedules.filter(
-          (y) =>
-            (y.studentCode.includes(major) || y.studentCode.includes('ITIT')) &&
+            y.studentCode.includes(major) &&
             y.studentCode.includes(enroll) &&
             y.course.includes(x._id),
         ).length,
+        totalStudent: totalStudent,
       };
     });
     return results;

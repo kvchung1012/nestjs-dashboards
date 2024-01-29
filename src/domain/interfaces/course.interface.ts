@@ -4,6 +4,7 @@ export interface Course extends Document {
   course: string;
   credit: string;
   major: string;
+  majorBackup: string;
   englishLevel: string;
   version: string;
 }

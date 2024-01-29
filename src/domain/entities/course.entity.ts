@@ -6,4 +6,5 @@ export const CourseSchema = new mongoose.Schema({
   enrollment: Number,
   semester: String,
   major: String,
+  majorBackup: String,
 });

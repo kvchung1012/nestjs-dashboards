@@ -37,20 +37,37 @@ export class ImportUpdateClassCommandHandler
       // kiểm tra xem data có phải của ngành IT hay không
       const classId = row.getCell(1).value?.toString();
       if (classId.startsWith('IT')) {
-        const batch = row.getCell(2).value?.toString();
-        const englishLevel = row.getCell(3).value?.toString();
+        const englishLevel = row.getCell(2).value?.toString();
+        const batch = row.getCell(3).value?.toString();
+        const major = row.getCell(4).value?.toString();
         // check major
         // check && insert course
 
-        console.log(classId);
-        const classDb = await this.classModel.findOneAndUpdate(
-          {
+        const check = await this.classModel.findOne({ name: classId });
+        if (check) {
+          const classDb = await this.classModel.findOneAndUpdate(
+            {
+              name: classId,
+            },
+            {
+              $set: {
+                batch: batch,
+                englishLevelNumber: englishLevel,
+                major: major,
+              },
+            },
+          );
+          await classDb?.save();
+        } else {
+          const create = await this.classModel.create({
             name: classId,
-          },
-          { $set: { batch: batch, englishLevelNumber: englishLevel } },
-        );
+            major: major,
+            englishLevel: englishLevel,
+            batch: batch,
+          });
 
-        await classDb?.save();
+          await create.save();
+        }
       }
     });
   }

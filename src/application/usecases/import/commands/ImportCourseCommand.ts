@@ -6,6 +6,7 @@ import * as ExcelJS from 'exceljs';
 import { Major } from 'src/domain/interfaces/major.interface';
 import { Course } from 'src/domain/interfaces/course.interface';
 import { Schedule } from 'src/domain/interfaces/schedule.interface';
+import { Class } from 'src/domain/interfaces/class.interface';
 
 export class ImportCourseCommand {
   constructor(public readonly buffer: Buffer) {}
@@ -24,6 +25,8 @@ export class ImportCourseCommandHandler
     private courseModel: Model<Course>,
     @Inject('SCHEDULE_MODEL')
     private scheduleModel: Model<Schedule>,
+    @Inject('CLASS_MODEL')
+    private classModel: Model<Class>,
   ) {}
 
   /**
@@ -41,7 +44,7 @@ export class ImportCourseCommandHandler
     worksheet.eachRow(async (row) => {
       // Assuming each row contains a single column with data
       //   data.push(row.getCell(1).value);
-      const className = row.getCell(4).value.toString();
+      const className = row.getCell(5).value.toString();
       // kiểm tra xem data có phải của ngành IT hay không
       if (className.toString().startsWith('IT')) {
         const courseName = row.getCell(2).value.toString();
@@ -65,12 +68,19 @@ export class ImportCourseCommandHandler
         });
 
         if (!courseDb) {
+          const majorBackup = await this.classModel.findOne({
+            name: className,
+          });
+
+          console.log(majorBackup, className);
+
           const createCourse = await this.courseModel.create({
             name: courseName,
             score: score,
             enrollment: enroll,
             semester: semester,
-            major: major,
+            major: major == 'IT' ? majorBackup?.major : major,
+            majorBackup: majorBackup?.major || '',
           });
 
           await createCourse.save();
