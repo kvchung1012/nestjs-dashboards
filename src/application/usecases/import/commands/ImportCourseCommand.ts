@@ -67,13 +67,11 @@ export class ImportCourseCommandHandler
           major: major,
         });
 
+        const majorBackup = await this.classModel.findOne({
+          name: className,
+        });
+
         if (!courseDb) {
-          const majorBackup = await this.classModel.findOne({
-            name: className,
-          });
-
-          console.log(majorBackup, className);
-
           const createCourse = await this.courseModel.create({
             name: courseName,
             score: score,
@@ -91,6 +89,7 @@ export class ImportCourseCommandHandler
           score: score,
           enrollment: enroll,
           studentCode: studentCode,
+          major: major == 'IT' ? majorBackup?.major : major,
         });
 
         cc.save();

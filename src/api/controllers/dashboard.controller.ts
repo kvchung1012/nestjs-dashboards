@@ -285,11 +285,19 @@ export class DashboardController {
     const results = course.map((x) => {
       return {
         group: x._id,
-        totalStudentLearned: schedules.filter(
+        totalStudentLearnedPass: schedules.filter(
           (y) =>
             y.studentCode.includes(major) &&
             y.studentCode.includes(enroll) &&
             y.course.includes(x._id),
+          x.score >= 50,
+        ).length,
+        totalStudentLearnedFail: schedules.filter(
+          (y) =>
+            y.studentCode.includes(major) &&
+            y.studentCode.includes(enroll) &&
+            y.course.includes(x._id),
+          x.score < 50,
         ).length,
         totalStudent: totalStudent,
       };
