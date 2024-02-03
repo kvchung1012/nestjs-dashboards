@@ -289,19 +289,21 @@ export class DashboardController {
           (y) =>
             y.studentCode.includes(major) &&
             y.studentCode.includes(enroll) &&
-            y.course.includes(x._id),
-          x.score >= 50,
+            y.course.includes(x._id) &&
+            y.score >= 50,
         ).length,
         totalStudentLearnedFail: schedules.filter(
           (y) =>
             y.studentCode.includes(major) &&
             y.studentCode.includes(enroll) &&
-            y.course.includes(x._id),
-          x.score < 50,
+            y.course.includes(x._id) &&
+            y.score < 50,
         ).length,
-        totalStudent: totalStudent,
       };
     });
-    return results;
+    return {
+      data: results,
+      total: totalStudent,
+    };
   }
 }
